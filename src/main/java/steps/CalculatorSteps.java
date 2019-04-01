@@ -21,7 +21,7 @@ public class CalculatorSteps {
     }
 
     @When("выбрана ипотечная программа")
-    public void clickCheckBox() throws InterruptedException {
+    public void clickCheckBox() {
         calculatorPage.checkBoxCheck();
     }
 
@@ -31,38 +31,41 @@ public class CalculatorSteps {
     }
 
     @When("выбран статус клиента \"(.+)\"")
-    public void selectClientStatusStep(String value) throws InterruptedException {
+    public void selectClientStatusStep(String value) {
         calculatorPage.chooseClientStatus(value);
     }
 
     @When("выбран уровень доходов \"(.+)\"")
-    public void selectIncomeLevelStep(String value) throws InterruptedException {
+    public void selectIncomeLevelStep(String value) {
         calculatorPage.chooseIncomeLevel(value);
     }
 
     @When("выбрана сумма, которую берем у банка \"(.+)\"")
-    public void selectSumStep(String value) throws InterruptedException {
+    public void selectSumStep(String value) {
         calculatorPage.chooseSum(value);
     }
 
     @When("выбран первоначальный взнос \"(.+)\"")
-    public void selectFirstInstallment(String value) throws InterruptedException {
+    public void selectFirstInstallment(String value) {
         calculatorPage.chooseFirstInstallment(value);
     }
 
     @When("выбран срок кредита \"(.+)\"")
-    public void selectCreditTermStep(String value) throws InterruptedException {
+    public void selectCreditTermStep(String value) {
         calculatorPage.chooseCreditTerm(value);
     }
 
     @When("нажата кнопка рассчета")
-    public void calculate() throws InterruptedException {
+    public void calculate() {
         calculatorPage.calculateButton();
     }
 
     @Then("проверить введенные значения - ежемесячный платеж \"(.+)\" , общая сумма выплат \"(.+)\" , сумма выплат по процентам \"(.+)\" , процентная ставка \"(.+)\"")
     public void checkFinalResultsStep(String monthPayment,String totalPayment, String percentSum, String rate) {
-        calculatorPage.checkFinalResults(monthPayment,totalPayment,percentSum,rate);
+        calculatorPage.checkPaymentForMonth(monthPayment);
+        calculatorPage.checkTotalPayment(totalPayment);
+        calculatorPage.checkPercentSum(percentSum);
+        calculatorPage.checkRate(rate);
     }
 
 }

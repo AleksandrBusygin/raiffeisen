@@ -3,6 +3,7 @@ package pages;
 import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -49,17 +50,6 @@ public class BasePage {
         }
     }
 
-    public void waitFieldisDisplayed(WebElement element) {
-        try {
-            WebDriverWait wait = new WebDriverWait(Init.getDriver(), 10);
-            wait.until((WebDriver d) -> element.isDisplayed());
-            return;
-        } catch (NoSuchElementException e) {
-            e.printStackTrace();
-        }
-        Assert.fail("Поле не отображено");
-    }
-
     public void click(WebElement element) {
         Wait<WebDriver> wait = new WebDriverWait(Init.getDriver(), 60, 2000);
         wait.until(ExpectedConditions.elementToBeClickable(element));
@@ -72,5 +62,22 @@ public class BasePage {
         Assert.assertTrue(("Искомого текста нет: " + expected + " вместо него " + actual), actual.equals(expected));
         System.out.println("Искомый текст есть: " + expected);
     }
+
+    public void waitPageLoaded() {
+        WebDriverWait wait = new WebDriverWait(Init.getDriver(), 30);
+        wait.ignoring(NoSuchElementException.class).until((ExpectedCondition<Boolean>) driver -> !isPresent(By.xpath("//*[@class='helpers-params loading']")));
+    }
+
+    public boolean isPresent(By locator) {
+        try {
+            Init.getDriver().manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+            return Init.getDriver().findElement(locator).isDisplayed();
+        } catch (NoSuchElementException e) {
+            return false;
+        } finally {
+            Init.getDriver().manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+        }
+    }
+
 
 }

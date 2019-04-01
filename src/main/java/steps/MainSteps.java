@@ -12,9 +12,9 @@ public class MainSteps {
         mainPage.selectButton();
     }
 
-    @When("загружена главная страница")
-    public void loadPage() {
-        mainPage.selectMainMenu("Ипотека");
+    @When("загружена главная страница, выбираем раздел \"(.+)\"")
+    public void loadPage(String value) {
+        mainPage.selectMainMenu(value);
     }
 
     @When("выбран ипотечный калькулятор для оформления ипотеки")

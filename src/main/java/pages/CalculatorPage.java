@@ -77,13 +77,13 @@ public class CalculatorPage extends BasePage {
     }
 
     @Step("отмечен чек-бокс ипотечной программы")
-    public void checkBoxCheck() throws InterruptedException {
+    public void checkBoxCheck() {
         checkBox(checkBox);
-        Thread.sleep(2000);
     }
 
     @Step("выбран вид ипотечной программы - {0}")
     public void chooseProgram(String program){
+        waitPageLoaded();
         scrollToElement(Init.getDriver().findElement(By.xpath("//select[@id=\"form_program\"]/parent::div")));
         click(Init.getDriver().findElement(By.xpath("//select[@id=\"form_program\"]/parent::div")));
         for(WebElement item : mortgageType){
@@ -96,8 +96,8 @@ public class CalculatorPage extends BasePage {
     }
 
     @Step("выбран статус клиента - {0}")
-    public void chooseClientStatus(String status) throws InterruptedException {
-        Thread.sleep(2000);
+    public void chooseClientStatus(String status) {
+       waitPageLoaded();
         scrollToElement(Init.getDriver().findElement(By.xpath("//div[contains(text(),'Я являюсь')]//parent::div[@class=\"input-block input-block--triangle input-block--filled\"]")));
         Init.getDriver().findElement(By.xpath("//div[contains(text(),'Я являюсь')]//parent::div[@class=\"input-block input-block--triangle input-block--filled\"]")).click();
         for(WebElement item : client){
@@ -110,8 +110,8 @@ public class CalculatorPage extends BasePage {
     }
 
     @Step("выбран уровень дохода - {0}")
-    public void chooseIncomeLevel(String level) throws InterruptedException {
-        Thread.sleep(2000);
+    public void chooseIncomeLevel(String level) {
+        waitPageLoaded();
         Init.getDriver().findElement(By.xpath("//div[contains(text(),'Уровень доходов')]//parent::div[@class=\"input-block input-block--triangle input-block--filled\"]")).click();
         for(WebElement item : levelOfIncome){
             if(item.getText().equalsIgnoreCase(level)) {
@@ -123,45 +123,76 @@ public class CalculatorPage extends BasePage {
     }
 
     @Step("выбрана сумма, которую берем у банка - {0}")
-    public void chooseSum(String money) throws InterruptedException {
-        Thread.sleep(3000);
+    public void chooseSum(String money) {
+        waitPageLoaded();
         click(getSum);
         fillField(getSum,money);
     }
 
     @Step("выбранна сумма первоначального взноса - {0}")
-    public void chooseFirstInstallment(String money) throws InterruptedException {
-        Thread.sleep(2000);
+    public void chooseFirstInstallment(String money) {
+        waitPageLoaded();
         click(installment);
         fillField(installment,money);
     }
 
     @Step("выбран срок кредита - {0}")
-    public void chooseCreditTerm(String creditTerm) throws InterruptedException {
-        Thread.sleep(2000);
+    public void chooseCreditTerm(String creditTerm) {
+        waitPageLoaded();
         click(term);
         fillField(term, creditTerm);
     }
 
     @Step("нажата кнопка \"Рассчитать\"")
-    public void calculateButton() throws InterruptedException {
-        Thread.sleep(2000);
+    public void calculateButton() {
+        waitPageLoaded();
         click(resultButton);
     }
 
-    @Step("проверены итоговые данные, для сравнения с данными: ежемесячный платеж - {0}, общая сумма выплат - {1}, сумма выплат по процентам - {2}, процентная ставка - {3}")
-    public void checkFinalResults(String resultPaymentForMonth, String resultTotalPayment, String resultPercentSum, String resultRate) {
+    @Step("проверены итоговые данные, для сравнения с данными: ежемесячный платеж - {0}")
+    public void checkPaymentForMonth(String resultPaymentForMonth){
         WebDriverWait wait = new WebDriverWait(Init.getDriver(), 30);
         wait.until((ExpectedCondition<Boolean>) driver -> {
-                    if (paymentForMonth.getText().replace("руб.", "").replaceAll(" ", "").equals(resultPaymentForMonth)
-                            && totalPayment.getText().replace("руб.", "").replaceAll(" ", "").equals(resultTotalPayment)
-                            && percentSum.getText().replace("руб.", "").replaceAll(" ", "").equals(resultPercentSum)
-                            && rate.getText().replace("%", "").replaceAll(" ", "").equals(resultRate)) {
-                        return Boolean.TRUE;
-                    }
-                    return false;
-                });
+            if (paymentForMonth.getText().replace("руб.", "").replaceAll(" ", "").equals(resultPaymentForMonth)){
+                return Boolean.TRUE;
+            }
+            return false;
+        });
     }
+
+    @Step("проверены итоговые данные, для сравнения с данными: общая сумма выплат - {0}")
+    public void checkTotalPayment(String resultTotalPayment){
+        WebDriverWait wait = new WebDriverWait(Init.getDriver(), 30);
+        wait.until((ExpectedCondition<Boolean>) driver -> {
+            if (totalPayment.getText().replace("руб.", "").replaceAll(" ", "").equals(resultTotalPayment)){
+                return Boolean.TRUE;
+            }
+            return false;
+        });
+    }
+
+    @Step("проверены итоговые данные, для сравнения с данными: сумма выплат по процентам - {0}")
+    public void checkPercentSum(String resultPercentSum){
+        WebDriverWait wait = new WebDriverWait(Init.getDriver(), 30);
+        wait.until((ExpectedCondition<Boolean>) driver -> {
+            if (percentSum.getText().replace("руб.", "").replaceAll(" ", "").equals(resultPercentSum)){
+                return Boolean.TRUE;
+            }
+            return false;
+        });
+    }
+
+    @Step("проверены итоговые данные, для сравнения с данными: процентная ставка  - {0}")
+    public void checkRate(String resultRate){
+        WebDriverWait wait = new WebDriverWait(Init.getDriver(), 30);
+        wait.until((ExpectedCondition<Boolean>) driver -> {
+            if (rate.getText().replace("%", "").replaceAll(" ", "").equals(resultRate)){
+                return Boolean.TRUE;
+            }
+            return false;
+        });
+    }
+
 
 
 
